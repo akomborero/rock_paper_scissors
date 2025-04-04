@@ -32,8 +32,7 @@ k = 10
 
 substract = 10 - 9
 print( 'substact')
-
-and = 6677
+nd = 6677
 
 a = "water"
 b = "juice"
