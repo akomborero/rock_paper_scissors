@@ -39,7 +39,7 @@ def generate_payslip(emp_id, name, basic, allowances, deductions, net_salary):
 
     filename = f"payslips/{emp_id}.pdf"
     pdf.output(filename)
-    print(f"✅ Payslip saved: {filename}")
+    print(f" Payslip saved: {filename}")
     
     return filename  # Returning the filename to send it via email
 
@@ -60,7 +60,7 @@ for index, row in df.iterrows():
         subject = "Your Payslip"
         body = "Please find your payslip attached."
         yag.send(email, subject, body, payslip_filename)
-        print(f"✅ Payslip sent to {email} successfully!")
+        print(f" Payslip sent to {email} successfully!")
 
     except Exception as e:
         print(f" Error processing row {index + 1}: {e}")
