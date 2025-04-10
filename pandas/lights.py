@@ -1,33 +1,40 @@
+import turtle, time
 
-import tkinter as tk
-from threading import Thread
-import time
+# Screen setup
+screen = turtle.Screen()
+screen.bgcolor("lightblue")
 
-class TrafficLight:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("Traffic Light")
-        self.label = tk.Label(self.root, text="Traffic Light", font=("Helvetica", 24))
-        self.label.pack()
-        self.light = tk.Label(self.root, text="", font=("Helvetica", 64))
-        self.light.pack()
-        self.thread = Thread(target=self.change_light)
-        self.thread.start()
+# Lights
+def draw_light(color, y):
+    t = turtle.Turtle()
+    t.penup()
+    t.goto(-80, y)
+    t.shape("circle")
+    t.color(color)
+    return t
 
-    def change_light(self):
-        colors = ["Red", "Yellow", "Green"]
-        for color in colors:
-            self.light.config(text=color, fg=color)
-            if color == "Red":
-                time.sleep(5)
-            elif color == "Yellow":
-                time.sleep(2)
-            else:
-                time.sleep(5)
+red = draw_light("red", 70)
+yellow = draw_light("grey", 40)
+green = draw_light("grey", 10)
 
-    def run(self):
-        self.root.mainloop()
+# Robot
+robot = turtle.Turtle()
+robot.shape("square")
+robot.color("blue")
+robot.penup()
+robot.goto(-200, -50)
 
-if __name__ == "__main__":
-    traffic_light = TrafficLight()
-    traffic_light.run()
+# Light sequence
+def traffic_sequence():
+    red.color("red")
+    time.sleep(2)
+    red.color("grey"); yellow.color("yellow")
+    time.sleep(1)
+    yellow.color("grey"); green.color("green")
+    time.sleep(0.5)
+    for _ in range(50):
+        robot.forward(5)
+        time.sleep(0.05)
+
+traffic_sequence()
+turtle.done()

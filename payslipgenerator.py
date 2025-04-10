@@ -1,6 +1,7 @@
 import pandas as pd
 from fpdf import FPDF
 import os
+import yagmail
 
 try:
     df = pd.read_excel("employees.xlsx")
@@ -8,6 +9,12 @@ except FileNotFoundError:
     print("Error: employees.xlsx not found. Please make sure it's in the same folder as this script.")
     exit()
 
+# Your email and the app password you generated
+email = "makomborerichidzviva@gmail.com"  # Replace with your email
+app_password = "ukhi qubc aser lqfe"  # Replace with your app password
+
+# Setting up yagmail
+yag = yagmail.SMTP(email, app_password)
 
 def generate_payslip(emp_id, name, basic, allowances, deductions, net_salary):
     pdf = FPDF()
@@ -33,6 +40,8 @@ def generate_payslip(emp_id, name, basic, allowances, deductions, net_salary):
     filename = f"payslips/{emp_id}.pdf"
     pdf.output(filename)
     print(f"✅ Payslip saved: {filename}")
+    
+    return filename  # Returning the filename to send it via email
 
 # Step 3: Loop through employees and generate payslips
 for index, row in df.iterrows():
@@ -45,7 +54,13 @@ for index, row in df.iterrows():
         deductions = row["Deductions"]
         net_salary = basic + allowances - deductions
 
-        generate_payslip(emp_id, name, basic, allowances, deductions, net_salary)
+        payslip_filename = generate_payslip(emp_id, name, basic, allowances, deductions, net_salary)
+
+        # Send the email with the payslip as an attachment
+        subject = "Your Payslip"
+        body = "Please find your payslip attached."
+        yag.send(email, subject, body, payslip_filename)
+        print(f"✅ Payslip sent to {email} successfully!")
 
     except Exception as e:
         print(f" Error processing row {index + 1}: {e}")
